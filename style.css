@@ -1,0 +1,14 @@
+#navbar{
+    background-color: blue;
+    color: white;
+}
+
+svg{
+    cursor:pointer;
+}
+
+rect{
+    fill:none;
+    stroke: black;
+    stroke-width: 10;
+}
