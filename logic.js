@@ -21,37 +21,82 @@ const svgPoint=(elem,x,y)=>{
 
 
 svg.addEventListener('mousedown',(e)=>{
+    let shapeS=document.createElementNS ("http://www.w3.org/2000/svg", shape)
+    let start= svgPoint(svg,e.clientX,e.clientY)
+    switch (shape) {
+        case "line":
+            const drawLine=(event)=>{
+                const p=svgPoint(svg,event.clientX,event.clientY)
+                if(p.x>start.x){
+                    p.x=start.x
+                }
+
+                if(p.y>start.y){
+                    p.y=start.y
+                }
+
+                
+                shapeS.setAttributeNS(null,'x1',p.x)
+                shapeS.setAttributeNS(null,'y1',p.y)
+                shapeS.setAttributeNS(null,'x2',start.x)
+                shapeS.setAttributeNS(null,'y2',start.y)
+                svg.appendChild(shapeS)
+
+                
+            }
+            
+            const endDrawLine=(e)=>{
+                svg.removeEventListener('mousemove',drawLine)
+                svg.removeEventListener('mouseup',endDrawLine)
+    
+            }
+    
+            svg.addEventListener('mousemove',drawLine)
+            svg.addEventListener('mouseup',endDrawLine)
+            break;
+
+        case "rect":
+            const drawRect=(event)=>{
+                const p=svgPoint(svg, event.clientX,event.clientY)
+                const w=Math.abs(p.x-start.x)
+                const h=Math.abs(p.y-start.y)
+                if(p.x>start.x){
+                    p.x=start.x
+                }
+
+                if(p.y>start.y){
+                    p.y=start.y
+                }
+
+                shapeS.setAttributeNS(null,'x',p.x)
+                shapeS.setAttributeNS(null,'y',p.y)
+                shapeS.setAttributeNS(null,'width',w)
+                shapeS.setAttributeNS(null,'height',h)
+                svg.appendChild(shapeS)
+
+            }
+
+            const endDrawRect=(e)=>{
+                svg.removeEventListener('mousemove',drawRect)
+                svg.removeEventListener('mouseup',endDrawRect)
+
+            }
+
+            svg.addEventListener('mousemove',drawRect)
+            svg.addEventListener('mouseup',endDrawRect)
+            break;
+
+        case "circle":
+            
+            break;
+
+
+        case "semicirc":
+            
+            break;
+    }
     //selected shape
-    const shapeS=document.createElementNS ("http://www.w3.org/2000/svg", shape)
-    const start=svgPoint(svg,e.clientX,e.clientY)
-    const draw=(event)=>{
-        const p=svgPoint(svg, event.clientX,event.clientY)
-        const w=Math.abs(p.x-start.x)
-        const h=Math.abs(p.y-start.y)
-        if(p.x>start.x){
-            p.x=start.x
-        }
-
-        if(p.y>start.y){
-            p.y=start.y
-        }
-
-        shapeS.setAttributeNS(null,'x',p.x)
-        shapeS.setAttributeNS(null,'y',p.y)
-        shapeS.setAttributeNS(null,'width',w)
-        shapeS.setAttributeNS(null,'height',h)
-        svg.appendChild(shapeS)
-
-    }
-
-    const endDraw=(e)=>{
-        svg.removeEventListener('mousemove',draw)
-        svg.removeEventListener('mouseup',endDraw)
-
-    }
-
-    svg.addEventListener('mousemove',draw)
-    svg.addEventListener('mouseup',endDraw)
+    
 
 })
 

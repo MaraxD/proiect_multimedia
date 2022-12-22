@@ -12,3 +12,9 @@ rect{
     stroke: black;
     stroke-width: 10;
 }
+
+line{
+    fill:none;
+    stroke: black;
+    stroke-width: 10;
+}
