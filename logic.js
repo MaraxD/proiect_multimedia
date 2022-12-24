@@ -6,6 +6,7 @@ for(let i=0;i<shapes.length;i++){
     shapes[i].addEventListener('click',function(){
         shape=shapes[i].id
     })
+    
 }
 
 
@@ -17,6 +18,17 @@ const svgPoint=(svg,x,y)=>{
     return p.matrixTransform(svg.getScreenCTM().inverse())
 }
 
+//adaugare eventListener atunci cand user ul schimba culoarea
+//2 events: input pentru cand user ul schimba culoarea
+        // change, cand user ul se razgandeste
+// var color=document.getElementById("color")
+// color.addEventListener('input',function(){
+//     //adaug css inline pentru tag ul html asociat butonului selectat
+//     let selectedBtn=document.getElementById(`${shape}`)
+//     svg.setAttribute('style',"stroke:`${color.value}`")  //dc pe svg???
+
+// })
+
 
 svg.addEventListener('mousedown',(e)=>{
     let shapeS=document.createElementNS ("http://www.w3.org/2000/svg", shape)
@@ -25,22 +37,14 @@ svg.addEventListener('mousedown',(e)=>{
         case "line":
             const drawLine=(event)=>{
                 const p=svgPoint(svg,event.clientX,event.clientY)
-                if(p.x>start.x){
-                    p.x=start.x
-                }
 
-                if(p.y>start.y){
-                    p.y=start.y
-                }
 
-                
-                shapeS.setAttributeNS(null,'x1',p.x)
-                shapeS.setAttributeNS(null,'y1',p.y)
-                shapeS.setAttributeNS(null,'x2',start.x)
-                shapeS.setAttributeNS(null,'y2',start.y)
+                shapeS.setAttribute('x1',start.x)
+                shapeS.setAttribute('y1',start.y)
+                shapeS.setAttribute('x2',p.x)
+                shapeS.setAttribute('y2',p.y)
                 svg.appendChild(shapeS)
 
-                
             }
             
             const endDrawLine=(e)=>{
@@ -66,10 +70,10 @@ svg.addEventListener('mousedown',(e)=>{
                     p.y=start.y
                 }
 
-                shapeS.setAttributeNS(null,'x',p.x)
-                shapeS.setAttributeNS(null,'y',p.y)
-                shapeS.setAttributeNS(null,'width',w)
-                shapeS.setAttributeNS(null,'height',h)
+                shapeS.setAttribute('x',p.x)
+                shapeS.setAttribute('y',p.y)
+                shapeS.setAttribute('width',w)
+                shapeS.setAttribute('height',h)
                 svg.appendChild(shapeS)
 
             }
@@ -87,6 +91,8 @@ svg.addEventListener('mousedown',(e)=>{
         case "circle":
             const drawCircle=(event)=>{
                 const p=svgPoint(svg, event.clientX,event.clientY)
+                //problema e ca face ca centrul cercului sa fie chiar unde a apasat user ul cu mouse ul prima data
+                //it shouldn t be like that
                 const r=Math.abs(p.x-start.x)/2
                 if(p.x>start.x){
                     p.x=start.x
@@ -96,9 +102,9 @@ svg.addEventListener('mousedown',(e)=>{
                     p.y=start.y
                 }
 
-                shapeS.setAttributeNS(null,'cx',p.x)
-                shapeS.setAttributeNS(null,'cy',p.y)
-                shapeS.setAttributeNS(null,'r',r)
+                shapeS.setAttribute(null,'cx',p.x)
+                shapeS.setAttribute(null,'cy',p.y)
+                shapeS.setAttribute(null,'r',r)
                 svg.appendChild(shapeS)
 
             }
@@ -115,10 +121,36 @@ svg.addEventListener('mousedown',(e)=>{
 
 
         case "elips":
-            
+            const drawEllipse=(event)=>{
+                const p=svgPoint(svg, event.clientX,event.clientY)
+                const rx=Math.abs(p.x-start.x)/2
+                const ry=Math.abs(p.y-start.y)/2
+                if(p.x>start.x){
+                    p.x=start.x
+                }
+
+                if(p.y>start.y){
+                    p.y=start.y
+                }
+
+                shapeS.setAttribute(null,'cx',p.x)
+                shapeS.setAttribute(null,'cy',p.y)
+                shapeS.setAttribute(null,'rx',rx)
+                shapeS.setAttribute(null,'ry',ry)
+                svg.appendChild(shapeS)
+
+            }
+
+            const endDrawEllipse=(e)=>{
+                svg.removeEventListener('mousemove',drawEllipse)
+                svg.removeEventListener('mouseup',endDrawEllipse)
+
+            }
+
+            svg.addEventListener('mousemove',drawEllipse)
+            svg.addEventListener('mouseup',endDrawEllipse)
             break;
     }
-    //selected shape
     
 
 })

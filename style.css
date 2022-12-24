@@ -4,16 +4,17 @@
 }
 
 svg{
+    background-color: pink;
     cursor:pointer;
 }
 
-rect{
+line{
     fill:none;
     stroke: black;
     stroke-width: 3;
 }
 
-line{
+rect{
     fill:none;
     stroke: black;
     stroke-width: 3;
