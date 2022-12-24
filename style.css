@@ -3,6 +3,14 @@
     color: white;
 }
 
+#thicc{
+    cursor: pointer;
+}
+
+#color{
+    cursor: pointer;
+}
+
 svg{
     background-color: pink;
     cursor:pointer;

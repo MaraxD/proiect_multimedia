@@ -29,6 +29,12 @@ color.addEventListener('input',function(){
     newColor=color.value
 })
 
+//getting the values from dropdown
+var dropdown=document.getElementById("thicc"), newThicc=3
+dropdown.addEventListener('input',function(){
+    newThicc=dropdown.value
+})
+
 
 svg.addEventListener('mousedown',(e)=>{
     let shapeS=document.createElementNS ("http://www.w3.org/2000/svg", shape)
@@ -39,6 +45,7 @@ svg.addEventListener('mousedown',(e)=>{
                 const p=svgPoint(svg,event.clientX,event.clientY)
 
                 shapeS.setAttribute('style','stroke:'+newColor)
+                shapeS.setAttribute('style','stroke-width:'+newThicc)
                 shapeS.setAttribute('x1',start.x)
                 shapeS.setAttribute('y1',start.y)
                 shapeS.setAttribute('x2',p.x)

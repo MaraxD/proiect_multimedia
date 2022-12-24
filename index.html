@@ -16,16 +16,31 @@
         <button class="shape" id="rect">Rectangle</button>
         <button class="shape" id="circle">Circle</button>  <!--elipsa?-->
         <button class="shape" id="ellipse">Ellipse</button>
+        <button class="modify" id="fill">Fill In</button>
         <button class="modify" id="undo">Undo</button>
         <button class="modify" id="redo">Redo</button>
+        <button class="delete" id="delete">Delete Mode</button>
     </div>
 
     <input type="color" id="color">
     <label for="color">Choose a color</label>
+
+    
     
 
+    <select name="thicc" id="thicc">
+        <option value="1">1 px</option>
+        <option value="3">3 px</option>
+        <option value="5">5 px</option>
+        <option value="8">8 px</option>
+        <!--sau poate si user input-->
+    </select>
+    <label for="thicc">Size</label>
 
-
+<!--redo design-->
+    <br>
+    <br>
+    
 
     <svg xmlns="http://www.w3.org/2000/svg" id="editor">
         <!-- voi genera figuri aici in functie de ce buton selecteaza utilizatorul -->
