@@ -4,11 +4,24 @@
 }
 
 svg{
+    background-color: pink;
     cursor:pointer;
+}
+
+line{
+    fill:none;
+    stroke: black;
+    stroke-width: 3;
 }
 
 rect{
     fill:none;
     stroke: black;
-    stroke-width: 10;
+    stroke-width: 3;
+}
+
+circle{
+    fill:none;
+    stroke: black;
+    stroke-width: 3;
 }
