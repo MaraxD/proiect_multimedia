@@ -19,15 +19,15 @@ const svgPoint=(svg,x,y)=>{
 }
 
 //adaugare eventListener atunci cand user ul schimba culoarea
-//2 events: input pentru cand user ul schimba culoarea
-        // change, cand user ul se razgandeste
-// var color=document.getElementById("color")
-// color.addEventListener('input',function(){
-//     //adaug css inline pentru tag ul html asociat butonului selectat
-//     let selectedBtn=document.getElementById(`${shape}`)
-//     svg.setAttribute('style',"stroke:`${color.value}`")  //dc pe svg???
+//2 events: input, pentru cand user ul schimba culoarea
+        // change, cand user ul se razgandeste    
+//cand desenezi mai multe forme, se stocheaza intr un array de acele forme
 
-// })
+var color=document.getElementById("color"), newColor='black' //initial e setat pe negru
+
+color.addEventListener('input',function(){
+    newColor=color.value
+})
 
 
 svg.addEventListener('mousedown',(e)=>{
@@ -38,11 +38,12 @@ svg.addEventListener('mousedown',(e)=>{
             const drawLine=(event)=>{
                 const p=svgPoint(svg,event.clientX,event.clientY)
 
-
+                shapeS.setAttribute('style','stroke:'+newColor)
                 shapeS.setAttribute('x1',start.x)
                 shapeS.setAttribute('y1',start.y)
                 shapeS.setAttribute('x2',p.x)
                 shapeS.setAttribute('y2',p.y)
+                
                 svg.appendChild(shapeS)
 
             }
@@ -70,6 +71,7 @@ svg.addEventListener('mousedown',(e)=>{
                     p.y=start.y
                 }
 
+                shapeS.setAttribute('style','stroke:'+newColor)
                 shapeS.setAttribute('x',p.x)
                 shapeS.setAttribute('y',p.y)
                 shapeS.setAttribute('width',w)
@@ -91,20 +93,12 @@ svg.addEventListener('mousedown',(e)=>{
         case "circle":
             const drawCircle=(event)=>{
                 const p=svgPoint(svg, event.clientX,event.clientY)
-                //problema e ca face ca centrul cercului sa fie chiar unde a apasat user ul cu mouse ul prima data
-                //it shouldn t be like that
                 const r=Math.abs(p.x-start.x)/2
-                if(p.x>start.x){
-                    p.x=start.x
-                }
 
-                if(p.y>start.y){
-                    p.y=start.y
-                }
-
-                shapeS.setAttribute(null,'cx',p.x)
-                shapeS.setAttribute(null,'cy',p.y)
-                shapeS.setAttribute(null,'r',r)
+                shapeS.setAttribute('style','stroke:'+newColor)
+                shapeS.setAttribute('cx',p.x)
+                shapeS.setAttribute('cy',p.y)
+                shapeS.setAttribute('r',r)
                 svg.appendChild(shapeS)
 
             }
@@ -125,18 +119,12 @@ svg.addEventListener('mousedown',(e)=>{
                 const p=svgPoint(svg, event.clientX,event.clientY)
                 const rx=Math.abs(p.x-start.x)/2
                 const ry=Math.abs(p.y-start.y)/2
-                if(p.x>start.x){
-                    p.x=start.x
-                }
 
-                if(p.y>start.y){
-                    p.y=start.y
-                }
-
-                shapeS.setAttribute(null,'cx',p.x)
-                shapeS.setAttribute(null,'cy',p.y)
-                shapeS.setAttribute(null,'rx',rx)
-                shapeS.setAttribute(null,'ry',ry)
+                shapeS.setAttribute('style','stroke:'+newColor)
+                shapeS.setAttribute('cx',p.x)
+                shapeS.setAttribute('cy',p.y)
+                shapeS.setAttribute('rx',rx)
+                shapeS.setAttribute('ry',ry)
                 svg.appendChild(shapeS)
 
             }
