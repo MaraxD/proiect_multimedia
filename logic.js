@@ -8,15 +8,13 @@ for(let i=0;i<shapes.length;i++){
     })
 }
 
-//crearea unui elem svg
-//document.createElementNS ("http://www.w3.org/2000/svg", TAG_SVG")
 
 const svg=document.querySelector("#editor") //de ce nu se poate cu getElementById
-const svgPoint=(elem,x,y)=>{
-    const p=svg.createSVGPoint()
+const svgPoint=(svg,x,y)=>{
+    const p=new DOMPoint(x,y)
     p.x=x
     p.y=y
-    return p.matrixTransform(elem.getScreenCTM().inverse())
+    return p.matrixTransform(svg.getScreenCTM().inverse())
 }
 
 
@@ -87,11 +85,36 @@ svg.addEventListener('mousedown',(e)=>{
             break;
 
         case "circle":
-            
+            const drawCircle=(event)=>{
+                const p=svgPoint(svg, event.clientX,event.clientY)
+                const r=Math.abs(p.x-start.x)/2
+                if(p.x>start.x){
+                    p.x=start.x
+                }
+
+                if(p.y>start.y){
+                    p.y=start.y
+                }
+
+                shapeS.setAttributeNS(null,'cx',p.x)
+                shapeS.setAttributeNS(null,'cy',p.y)
+                shapeS.setAttributeNS(null,'r',r)
+                svg.appendChild(shapeS)
+
+            }
+
+            const endDrawCircle=(e)=>{
+                svg.removeEventListener('mousemove',drawCircle)
+                svg.removeEventListener('mouseup',endDrawCircle)
+
+            }
+
+            svg.addEventListener('mousemove',drawCircle)
+            svg.addEventListener('mouseup',endDrawCircle)
             break;
 
 
-        case "semicirc":
+        case "elips":
             
             break;
     }

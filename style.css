@@ -10,11 +10,17 @@ svg{
 rect{
     fill:none;
     stroke: black;
-    stroke-width: 10;
+    stroke-width: 3;
 }
 
 line{
     fill:none;
     stroke: black;
-    stroke-width: 10;
+    stroke-width: 3;
+}
+
+circle{
+    fill:none;
+    stroke: black;
+    stroke-width: 3;
 }
