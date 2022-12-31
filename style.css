@@ -17,10 +17,10 @@ svg{
     cursor: pointer;
 }
 
-/*selectat*/
-.on{
-    fill:black
+button{
+    cursor: pointer;
 }
+
 
 line{
     fill:none;
@@ -34,8 +34,20 @@ rect{
     stroke-width: 3;
 }
 
+rect:hover{
+    fill:white;
+    fill-opacity: 0.7;
+    cursor: move;
+}
+
+
 circle{
     fill:none;
     stroke: black;
     stroke-width: 3;
+}
+
+circle:hover{
+    fill:white;
+    fill-opacity: 0.7;
 }
