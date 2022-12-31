@@ -8,7 +8,7 @@ Exemplu: Google Drawings
 1p - suport pentru anularea ultimelor n operații (undo) --DONE+redo (de verificat aici)<br/>
 1.5p - suport pentru mutare elemente utilizând mouse-ul <br/>
 2p - suport pentru desenare căi cu editarea ulterioară a punctelor <br/>
-1p - funcționalitate de export în format raster (*.png sau *.jpeg) <br/>
+1p - funcționalitate de export în format raster (*.png sau *.jpeg) --DONE (dar nu se ia toata inaltimea?) <br/>
 0.5p - posibilitate salvare desen în format SVG <br/>
 1p - salvarea automată a desenului curent și reîncărcare la pornire cu ajutorul Web Storage API (sau a unui alt API similar) <br/>
 
