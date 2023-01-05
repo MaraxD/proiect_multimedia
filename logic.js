@@ -29,12 +29,11 @@ dropdown.addEventListener('input',function(){
 })
 
 //an array of shapes that have been drawn
-var drawnS=[], k=0
+var drawnS=[]
 
 //for the undo button, we will start with the last element in the array and the delete it 
 //but we have to make a copy after the initial array if we want the redo button to work
 //both buttons should disappear only when there is at least one shape drawn
-
 var btnUndo=document.getElementById("undo") 
 btnUndo.addEventListener('click',function(){ 
     drawnS.push(svg.lastElementChild)      
@@ -52,6 +51,32 @@ btnRedo.addEventListener('click',function(){
         drawnS.length--
     }
 })
+
+//move a shape
+// function moveShape(){
+//     svg.addEventListener('mousedown',startMove)
+//     svg.addEventListener('mousemove',move)
+//     svg.addEventListener('mouseup',endMove)
+//     svg.addEventListener('mouseleave',endMove)
+//     var selectedShape=null
+
+//     function startMove(e){
+//         selectedShape=e.target        
+//     }
+
+//     function move(e){
+//         if(selectedShape){
+//             selectedShape.preventDefault()
+//             var x=parseFloat(selectedShape.getAttributeNS(null,'x'))
+//             selectedShape.setAttributeNS(null,'x',x+0.1)
+//         }
+//     }
+
+//     function endMove(e){
+//         selectedShape=null
+//     }
+// }
+
 
 //download the drawing
 const getCSS=()=>{
@@ -106,26 +131,40 @@ btnSave.addEventListener('click',function(){
 
 
 //drawings remaining on page upon reload
-// function populateStorage(){
-//     if(drawnS.length){
-//         for(let i=0;i<drawnS.length;i++){
-//             localStorage.setItem("item"+i,drawnS[i])
-//         }
+function populateStorage(i,shape){
+    localStorage.setItem(`item ${i}`,shape)
+}
 
-//     }
-// }
+function setDrawings(){
+    for(let i=0;i<localStorage.length;i++){
+        svg.appendChild(localStorage.getItem(localStorage.key(`item ${i}`)))
+    }
+}
 
-window.addEventListener('load',(event)=>{
-    // const items=localStorage.getItem('line')
-    // if(items.length){
-    //    for(let i=0;i<items.length;i++){
-    //     svg.appendChild(items[i])
-    // } 
-    // }
-    
+let k
+window.addEventListener('load',()=>{
+    // localStorage.clear()
+    if(localStorage.length!=0){
+        setDrawings()
+    }else{
+        k=0
+    }
 })
 
 
+function drawAround(startX,startY, endX, endY){
+    const w=Math.abs(endX-startX)
+    const h=Math.abs(endY-startY)
+    if(endX>startX){
+        endX=startX
+    }
+
+    if(endY>startY){
+        endY=startY
+    }
+
+    svg.innerHTML=`<rect x=${endX} y=${endY} w=${w} h=${h}></rect>`
+}
 
 const svg=document.querySelector("#editor") //de ce nu se poate cu getElementById
 const svgPoint=(svg,x,y)=>{
@@ -137,12 +176,13 @@ const svgPoint=(svg,x,y)=>{
 
 let drawnLines=[]
 svg.addEventListener('mousedown',(e)=>{
-    let shapeS=document.createElementNS ("http://www.w3.org/2000/svg", shape)
+    let shapeS=document.createElementNS("http://www.w3.org/2000/svg", shape)
     let start= svgPoint(svg,e.clientX,e.clientY)
     switch (shape) {
         case "line":
             const drawLine=(event)=>{
-                const p=svgPoint(svg,event.clientX,event.clientY)
+                let p=svgPoint(svg,event.clientX,event.clientY)
+                
 
                 shapeS.setAttribute('class','drawing')
                 shapeS.setAttribute('style','stroke:'+newColor+";stroke-width:"+newThicc)
@@ -150,7 +190,9 @@ svg.addEventListener('mousedown',(e)=>{
                 shapeS.setAttribute('y1',start.y)
                 shapeS.setAttribute('x2',p.x)
                 shapeS.setAttribute('y2',p.y)
+
                 svg.appendChild(shapeS)
+                
 
                 //editing
                 shapeS.addEventListener('click',(e)=>{
@@ -172,11 +214,8 @@ svg.addEventListener('mousedown',(e)=>{
                     e.target.style.strokewidth=newThicc
                     newColor="black"
                 })
-                
-                
-                
-                
-                
+
+                populateStorage(k++,shapeS)
             }
             
             const endDrawLine=(e)=>{
@@ -245,7 +284,7 @@ svg.addEventListener('mousedown',(e)=>{
                         btnMove.id="move"
 
                         document.getElementById("btn-group").appendChild(btnMove)
-                        document.getElementById("btn-group").append(btnEdit)
+                        document.getElementById("btn-group").appendChild(btnEdit)
                         document.getElementById("btn-group").appendChild(btnDelete)
 
                         
@@ -261,7 +300,7 @@ svg.addEventListener('mousedown',(e)=>{
 
                         btnEdit.addEventListener('click',function(){
                             //only the selected shape can be edited
-                            e.target.addEventListener('click',function(){
+                                e.target.addEventListener('click',function(){
                                 e.target.style.fill=fillColor
                                 e.target.style.strokewidth=newThicc
                                 newColor="black" //'reset' de color
@@ -271,82 +310,64 @@ svg.addEventListener('mousedown',(e)=>{
                             
                         })
 
-                        btnMove.addEventListener('click',function(){
-                            svg.addEventListener('mousedown',startMove)
-                            svg.addEventListener('mousemove',move)
-                            svg.addEventListener('mouseup',endMove)
-                            svg.addEventListener('mouseleave',endMove)
-
-                            var selectedItem, offset
-
-                            function getMousePosition(event){
-                                var CTM=svg.getScreenCTM()
-                                return{
-                                    x:(event.clientX-CTM.e)/CTM.a,
-                                    y:(event.clientY-CTM.f)/CTM.d
-
-                                };
-                            }
-
-                            function startMove(event){
-                                if(event.target){
-                                    selectedItem=event.target
-                                    offset=getMousePosition(event)
-                                    offset.x-=parseFloat(selectedItem.getAttribute(null,'x'))
-                                    offset.y-=parseFloat(selectedItem.getAttribute(null,'y'))
-
-                                }
-                            }
-
-                            function move(event){
-                                if(selectedItem){
-                                    event.preventDefault()
-                                    var coord=getMousePosition(event)
-                                    selectedItem.setAttributeNS(null,'x',coord.x-offset.x)
-                                    selectedItem.setAttributeNS(null,'y',coord.y-offset.y)
-
-                                }
-                            }
-
-                            function endMove(){
-                                selectedItem=null
-                            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            // e.target.addEventListener('mouseover',(event)=>{
-                            //     event.preventDefault()
-                            //     console.log(e.target.getAttributeNS(null,'x'))
-                            //     var newX=parseFloat(e.target.getAttributeNS(null,'x'))
-                            //     e.target.setAttributeNS(null,'x',newX+0.1)
-                            // })
-
-                            // e.target.addEventListener('mouseup',function(){
-                            //     e.target=null
-                            // }) 
                         
-                        })
                     }
+                })
+
+                let btnMove=document.getElementById('move')
+                btnMove.addEventListener('click',(event)=>{
+                    let shape=event.target
+                    shape.addEventListener('mousedown',startMove)
+                    shape.addEventListener('mousemove',move)
+                    shape.addEventListener('mouseup',endMove)
+                    shape.addEventListener('mouseleave',endMove)
+
+                    var selectedItem, offset
+
+                    function getMousePosition(event){
+                        var CTM=svg.getScreenCTM()
+                        return{
+                            x:(event.clientX-CTM.e)/CTM.a,
+                            y:(event.clientY-CTM.f)/CTM.d
+
+                        };
+                    }
+
+                    function startMove(event){
+                        if(event.target){
+                            selectedItem=event.target
+                            offset=getMousePosition(event)
+                            offset.x-=parseFloat(selectedItem.getAttribute(null,'x'))
+                            offset.y-=parseFloat(selectedItem.getAttribute(null,'y'))
+
+                        }
+                    }
+
+                    function move(event){
+                        if(selectedItem){
+                            event.preventDefault()
+                            var coord=getMousePosition(event)
+                            selectedItem.setAttributeNS(null,'x',coord.x-offset.x)
+                            selectedItem.setAttributeNS(null,'y',coord.y-offset.y)
+
+                        }
+                    }
+
+                    function endMove(){
+                        selectedItem=null
+                    }
+
+                    // e.target.addEventListener('mouseover',(event)=>{
+                    //     event.preventDefault()
+                    //     console.log(e.target.getAttributeNS(null,'x'))
+                    //     var newX=parseFloat(e.target.getAttributeNS(null,'x'))
+                    //     e.target.setAttributeNS(null,'x',newX+0.1)
+                    // })
+
+                    // e.target.addEventListener('mouseup',function(){
+                    //     e.target=null
+                    // }) 
+                
                 })
 
             
@@ -360,6 +381,7 @@ svg.addEventListener('mousedown',(e)=>{
             const drawCircle=(event)=>{
                 const p=svgPoint(svg, event.clientX,event.clientY)
                 const r=Math.abs(p.x-start.x)/2
+                
 
                 shapeS.setAttribute('class','drawing')
                 shapeS.setAttribute('style','stroke:'+newColor+";stroke-width:"+newThicc)
@@ -396,15 +418,27 @@ svg.addEventListener('mousedown',(e)=>{
             break;
 
 
-        case "elips":
+        case "ellipse":
+            console.log("hey")
             const drawEllipse=(event)=>{
                 const p=svgPoint(svg, event.clientX,event.clientY)
-                const rx=Math.abs(p.x-start.x)/2
-                const ry=Math.abs(p.y-start.y)/2
+                const rx=Math.abs(p.x-start.x)/2,
+                    ry=Math.abs(p.y-start.y)/2,
+                    cx=(p.x+start.x)/2,
+                    cy=(p.y+start.y)/2
+
+
+                // if(p.x>start.x){
+                //     p.x=start.x
+                // }
+
+                // if(p.y>start.y){
+                //     p.y=start.y
+                // }
 
                 shapeS.setAttribute('style','stroke:'+newColor+";stroke-width:"+newThicc)
-                shapeS.setAttribute('cx',p.x)
-                shapeS.setAttribute('cy',p.y)
+                shapeS.setAttribute('cx',cx)
+                shapeS.setAttribute('cy',cy)
                 shapeS.setAttribute('rx',rx)
                 shapeS.setAttribute('ry',ry)
                 svg.appendChild(shapeS)
@@ -433,7 +467,7 @@ svg.addEventListener('mousedown',(e)=>{
 
             svg.addEventListener('mousemove',drawEllipse)
             svg.addEventListener('mouseup',endDrawEllipse)                
-            drawnS.push(shapeS)
+           
 
             break;
     }

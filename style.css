@@ -37,6 +37,10 @@ rect{
 rect:hover{
     fill:white;
     fill-opacity: 0.7;
+    cursor: pointer;
+}
+
+rect:checked{
     cursor: move;
 }
 
