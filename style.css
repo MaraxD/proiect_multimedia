@@ -1,29 +1,105 @@
 #navbar{
-    background-color: blue;
-    color: white;
+    border-bottom: 2px solid #d0cdcdb1;
+    color: black;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    padding-bottom: 5px;
+}
+
+#shapePic{
+    width: 30px;
+    height: 30px;
+}
+
+#tools{
+    margin-top: 50px;
+    padding-bottom: 70px;
+    border-bottom: 2px solid #d0cdcdb1; 
+}
+
+#btn-group{
+    text-align: center;
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    left: 30%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#edit{
+    text-align: center;
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    left: 70%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#edit button{
+    margin-right: 5px;
+}
+
+#desgin{
+    text-align: center;
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.undoRedo{
+    text-align: center;
+}
+
+
+
+#shape{
+    justify-content: center;
+}
+
+#modify{
+    justify-content: center;
+
+}
+
+#design label{
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+
 }
 
 #thicc{
     cursor: pointer;
+    display: inline;
+
 }
 
 #color{
     cursor: pointer;
+    display: inline;
 }
 
 svg{
-    background-color: pink;
-    /* cursor:url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/heart.svg"),auto; */
-    cursor: pointer;
+    cursor:url("https://cdn.slidesharecdn.com/profile-photo-hicks49-48x48.jpg?cb=1523561702"),auto;
+    /* cursor: crosshair; */
+    width: 1000px;
+    height: 400px;
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+    border-radius: 50px;
+    box-shadow:5px 5px 10px 10px #d0cdcdb1 
 }
 
 button{
     cursor: pointer;
 }
 
-
 line{
-    fill:none;
     stroke: black;
     stroke-width: 3;
 }
@@ -35,7 +111,7 @@ rect{
 }
 
 rect:hover{
-    fill:white;
+    fill:#d0cdcdb1 ;
     fill-opacity: 0.7;
     cursor: pointer;
 }
@@ -52,6 +128,20 @@ circle{
 }
 
 circle:hover{
-    fill:white;
+    fill:#d0cdcdb1;
+    fill-opacity: 0.7;
+    cursor: pointer;
+}
+
+ellipse{
+    fill:none;
+    stroke: black;
+    stroke-width: 3;
+}
+
+ellipse:hover{
+    fill:#d0cdcdb1 ;
+    cursor: pointer;
+
     fill-opacity: 0.7;
 }

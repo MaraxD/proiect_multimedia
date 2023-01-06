@@ -15,7 +15,7 @@ for(let i=0;i<shapes.length;i++){
         // change, cand user ul se razgandeste    
 //cand desenezi mai multe forme, se stocheaza intr un array de acele forme
 
-var color=document.getElementById("color"), newColor='black', fillColor='white' //initial e setat pe negru
+var color=document.getElementById("color"), newColor='black', fillColor='black' //initial e setat pe negru
 
 color.addEventListener('input',function(){
     newColor=color.value
@@ -166,6 +166,88 @@ function drawAround(startX,startY, endX, endY){
     svg.innerHTML=`<rect x=${endX} y=${endY} w=${w} h=${h}></rect>`
 }
 
+function editing(shape){
+    shape.addEventListener('click',(e)=>{
+        if(!(document.getElementById('edit'))){
+
+            
+            divEdit=document.createElement("div")
+            divEdit.id="edit"
+            document.getElementById("tools").appendChild(divEdit)
+
+            h4Elem=document.createElement("h4")
+            h4Elem.innerHTML="Tools"
+            document.getElementById("edit").appendChild(h4Elem)
+
+            btnDelete=document.createElement("button")
+            btnDelete.innerHTML="Delete"
+            btnDelete.id="delete"
+
+            btnEdit=document.createElement("button")
+            btnEdit.innerHTML="Color it"
+            btnEdit.id="fill"
+
+            btnStroke=document.createElement("button")
+            btnStroke.innerHTML="Change stroke"
+            btnStroke.id="stroke"
+
+            btnMove=document.createElement("button")
+            btnMove.innerHTML="Move"
+            btnMove.id="move"
+
+            btnCancel=document.createElement("button")
+            btnCancel.innerHTML="Cancel"
+            btnCancel.id="cancel"
+
+            
+            document.getElementById("edit").appendChild(btnMove)
+            document.getElementById("edit").appendChild(btnEdit)
+            document.getElementById("edit").appendChild(btnStroke)
+            document.getElementById("edit").appendChild(btnDelete)
+            document.getElementById("edit").appendChild(btnCancel)
+
+            //stergere
+            btnDelete.addEventListener('click',function(){
+                svg.removeChild(e.target)
+                //daca sa sterge trebuie sa dispara si butoanele
+                document.getElementById("tools").removeChild(divEdit)
+            })
+
+            //fill in: does not work the second time you press on the shape
+            btnEdit.addEventListener('click',function(){
+                //only the selected shape can be edited
+                    e.target.addEventListener('click',function(){
+                        if(e.target.tagName==='line'){
+                            e.target.style.stroke=fillColor
+                        }else{
+                            e.target.style.fill=fillColor
+                        }
+                        newColor="black" //'reset' de color
+                        document.getElementById("tools").removeChild(divEdit)
+
+
+                    })
+                
+            })
+
+            //change stroke width
+            btnStroke.addEventListener('click',function(){
+                e.target.setAttribute('style',`stroke-width:${newThicc}`)
+                newThicc=3 //'reset' the width
+                document.getElementById("tools").removeChild(divEdit)
+
+
+            })
+
+            //if the user changes its mind
+            btnCancel.addEventListener('click',function(){
+                document.getElementById("tools").removeChild(divEdit)
+            })
+            
+        }
+    })
+}
+
 const svg=document.querySelector("#editor") //de ce nu se poate cu getElementById
 const svgPoint=(svg,x,y)=>{
     const p=new DOMPoint(x,y)
@@ -193,29 +275,6 @@ svg.addEventListener('mousedown',(e)=>{
 
                 svg.appendChild(shapeS)
                 
-
-                //editing
-                shapeS.addEventListener('click',(e)=>{
-                    let btnDelete=document.getElementById("delete"),
-                        btnEdit=document.getElementById('edit')
-
-                    btnDelete.addEventListener('click',function(){
-                        //se creeaza butonul de delete
-                        svg.removeChild(e.target)
-                    })
-
-                    btnEdit.addEventListener('click',function(){
-                        console.log(e.target)
-                        console.log("da")
-                    })
-
-                    // console.log(e.target)
-                    e.target.style.stroke=fillColor
-                    e.target.style.strokewidth=newThicc
-                    newColor="black"
-                })
-
-                populateStorage(k++,shapeS)
             }
             
             const endDrawLine=(e)=>{
@@ -226,8 +285,7 @@ svg.addEventListener('mousedown',(e)=>{
     
             svg.addEventListener('mousemove',drawLine)
             svg.addEventListener('mouseup',endDrawLine)                
-            drawnLines.push(shapeS)
-            localStorage.setItem("line",drawnLines)
+            editing(shapeS)
 
             
 
@@ -267,55 +325,12 @@ svg.addEventListener('mousedown',(e)=>{
             svg.addEventListener('mousemove',drawRect)
             svg.addEventListener('mouseup',endDrawRect)
                 
-            //BUGGGGG: the second time you want to edit the shape you can t
                 //editing
-                shapeS.addEventListener('click',(e)=>{
-                    if(!(document.getElementById('delete')&& document.getElementById('edit')&&document.getElementById('move'))){
-                        btnDelete=document.createElement("button")
-                        btnDelete.innerHTML="Delete"
-                        btnDelete.id="delete"
-
-                        btnEdit=document.createElement("button")
-                        btnEdit.innerHTML="Edit"
-                        btnEdit.id="edit"
-
-                        btnMove=document.createElement("button")
-                        btnMove.innerHTML="Move"
-                        btnMove.id="move"
-
-                        document.getElementById("btn-group").appendChild(btnMove)
-                        document.getElementById("btn-group").appendChild(btnEdit)
-                        document.getElementById("btn-group").appendChild(btnDelete)
-
-                        
-
-                        //stergere
-                        btnDelete.addEventListener('click',function(){
-                            svg.removeChild(e.target)
-                            //daca sa sterge trebuie sa dispara si butoanele
-                            document.getElementById("btn-group").removeChild(btnDelete)
-                            document.getElementById("btn-group").removeChild(btnEdit)
-
-                        })
-
-                        btnEdit.addEventListener('click',function(){
-                            //only the selected shape can be edited
-                                e.target.addEventListener('click',function(){
-                                e.target.style.fill=fillColor
-                                e.target.style.strokewidth=newThicc
-                                newColor="black" //'reset' de color
-                                document.getElementById("btn-group").removeChild(btnDelete)
-                                document.getElementById("btn-group").removeChild(btnEdit)
-                            })
-                            
-                        })
-
-                        
-                    }
-                })
+                editing(shapeS)
 
                 let btnMove=document.getElementById('move')
-                btnMove.addEventListener('click',(event)=>{
+                if(btnMove){
+                    btnMove.addEventListener('click',(event)=>{
                     let shape=event.target
                     shape.addEventListener('mousedown',startMove)
                     shape.addEventListener('mousemove',move)
@@ -369,6 +384,8 @@ svg.addEventListener('mousedown',(e)=>{
                     // }) 
                 
                 })
+                }
+                
 
             
 
@@ -390,19 +407,6 @@ svg.addEventListener('mousedown',(e)=>{
                 shapeS.setAttribute('r',r)
                 svg.appendChild(shapeS)
 
-                //editing
-                shapeS.addEventListener('click',(e)=>{
-                    let btnDelete=document.getElementById("delete")
-                    btnDelete.addEventListener('click',function(){
-                        svg.removeChild(e.target)
-                    })
-                    console.log(e.target)
-                    e.target.style.fill=fillColor
-                    e.target.style.strokewidth=newThicc
-                    newColor="black"
-
-                })
-
 
             }
 
@@ -413,28 +417,23 @@ svg.addEventListener('mousedown',(e)=>{
             }
 
             svg.addEventListener('mousemove',drawCircle)
-            svg.addEventListener('mouseup',endDrawCircle)                
+            svg.addEventListener('mouseup',endDrawCircle)     
+            
+            editing(shapeS)
+
 
             break;
 
 
         case "ellipse":
-            console.log("hey")
             const drawEllipse=(event)=>{
-                const p=svgPoint(svg, event.clientX,event.clientY)
-                const rx=Math.abs(p.x-start.x)/2,
+                const p=svgPoint(svg, event.clientX,event.clientY),
+                    rx=Math.abs(p.x-start.x)/2,
                     ry=Math.abs(p.y-start.y)/2,
                     cx=(p.x+start.x)/2,
                     cy=(p.y+start.y)/2
 
 
-                // if(p.x>start.x){
-                //     p.x=start.x
-                // }
-
-                // if(p.y>start.y){
-                //     p.y=start.y
-                // }
 
                 shapeS.setAttribute('style','stroke:'+newColor+";stroke-width:"+newThicc)
                 shapeS.setAttribute('cx',cx)
@@ -442,19 +441,6 @@ svg.addEventListener('mousedown',(e)=>{
                 shapeS.setAttribute('rx',rx)
                 shapeS.setAttribute('ry',ry)
                 svg.appendChild(shapeS)
-
-                //editing
-                shapeS.addEventListener('click',(e)=>{
-                    let btnDelete=document.getElementById("delete")
-                    btnDelete.addEventListener('click',function(){
-                        svg.removeChild(e.target)
-                    })
-                    console.log(e.target)
-                    e.target.style.fill=fillColor
-                    e.target.style.strokewidth=newThicc
-                    newColor="black"
-
-                })
 
 
             }
@@ -468,6 +454,8 @@ svg.addEventListener('mousedown',(e)=>{
             svg.addEventListener('mousemove',drawEllipse)
             svg.addEventListener('mouseup',endDrawEllipse)                
            
+            editing(shapeS)
+
 
             break;
     }
