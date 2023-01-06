@@ -2,9 +2,9 @@ Editor SVG
 Descriere: Construirea unui editor pentru grafică vectorială folosind elementul SVG. 
 Exemplu: Google Drawings
 
-1p - suport pentru adăugare elemente geometrice de bază (linie, elipsă, dreptunghi) --DONE, mai putin elipsa <br/>
+1p - suport pentru adăugare elemente geometrice de bază (linie, elipsă, dreptunghi) --DONE <br/>
 0.5p - suport pentru selectarea culorii și grosimii liniei pentru adăugare --DONE <br/>
-2p - suport pentru selecție și ștergere / modificare elemente existente (proprietăți: culoare și grosime linie, culoare fundal) --DONE, mai trebuie grosime linie si culoare linie <br/>
+2p - suport pentru selecție și ștergere / modificare elemente existente (proprietăți: culoare și grosime linie, culoare fundal) --DONE <br/>
 1p - suport pentru anularea ultimelor n operații (undo) --DONE+redo (de verificat aici)<br/>
 1.5p - suport pentru mutare elemente utilizând mouse-ul <br/>
 2p - suport pentru desenare căi cu editarea ulterioară a punctelor <br/>
