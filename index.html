@@ -4,35 +4,77 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor SVG</title>
+    <title>SVG Editor</title>
     <link rel="stylesheet" href="./style.css">
-</head>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">   
+    <style> @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap'); </style></head>
 <body>
 
-    <div id="navbar">SVG Editor</div>
-
-    <div id="btn-group">
-        <button class="shape" id="line">Line</button>
-        <button class="shape" id="rect">Rectangle</button>
-        <button class="shape" id="circle">Circle</button>  <!--elipsa?-->
-        <button class="shape" id="ellipse">Ellipse</button>
+    <div id="navbar">
+        SVG Editor
         <button class="modify" id="undo">Undo</button>
-        <button class="modify" id="redo">Redo</button>
+            <button class="modify" id="redo">Redo</button>
+            <button id="save">Save</button>
+
+
     </div>
 
-    <input type="color" id="color">
-    <label for="color">Choose a color</label>
+    <div id="tools">
+        
+        <div id="btn-group">
+            <h4>Shapes</h4>
+            <button class="shape" id="line">
+                <img id="shapePic" src="https://cdn2.iconfinder.com/data/icons/dottie-design-part-1/24/design_008-line-path-shape-straight-512.png"/>
+            </button>
+            <button class="shape" id="rect">
+                <img id="shapePic" src="https://th.bing.com/th/id/R.42475c74e0086e5d34d52e0c7bdc0cc1?rik=TzJiWi%2bPEi164Q&riu=http%3a%2f%2fwww.icteachers.co.uk%2fchildren%2fsats%2fimages%2f3d_rectangle.gif&ehk=5g%2bQILl0z%2bjYSdNXpV0x4396JYE7GCxn62%2fEfjL2k8o%3d&risl=&pid=ImgRaw&r=0"/>
+            </button>
+            <button class="shape" id="circle">
+                <img id="shapePic" src="https://th.bing.com/th/id/R.cf9165ec794cdfca4af51cbcfc308c5e?rik=m5mgbLBwHxDEqA&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fcircle-shape-png-hd-circle-shape-transparent-png-sticker-christmas-800.png&ehk=PdlM3EIyesjIqcITBFNDqu9lp8kAJoaoC4WrKjQ%2fqnI%3d&risl=&pid=ImgRaw&r=0"/>
+            </button>  
+            <button class="shape" id="ellipse">
+                <img id="shapePic" src="https://images.vexels.com/media/users/3/139183/isolated/preview/e81136ff89d964e1b8e8e4f7ff63d4cf-ellipse-by-vexels.png"/>
+            </button>
+        </div>
+
+        
+    </div>
+    <br>
+    <br>   
     
 
+    <div id="design">
+       <label for="color">Choose a color</label>
+        
+        <input type="color" id="color">
 
+        
+        <br>
+        <br>
+        <label for="thicc">Size</label>
+        
+        <select name="thicc" id="thicc">
+            <option value="1">1 px</option>
+            <option value="3">3 px</option>
+            <option value="5">5 px</option>
+            <option value="8">8 px</option>
+            <!--sau poate si user input-->
+        </select> 
+    </div>
+    
 
+<!--redo design-->
+    <br>
+    <br>
 
-    <svg xmlns="http://www.w3.org/2000/svg" id="editor">
-        <!-- voi genera figuri aici in functie de ce buton selecteaza utilizatorul -->
-
-    </svg>
+    <!-- voi genera figuri aici in functie de ce buton selecteaza utilizatorul -->
+    <svg xmlns="http://www.w3.org/2000/svg" id="editor"></svg>
+    
+    <br>
+    <br>
 
     <script src="./logic.js"></script>
+
     
 </body>
 </html>
