@@ -84,7 +84,7 @@
 }
 
 svg{
-    cursor:url("https://cdn.slidesharecdn.com/profile-photo-hicks49-48x48.jpg?cb=1523561702"),auto;
+    cursor:url("./media/pencil.png"),auto;
     /* cursor: crosshair; */
     width: 1000px;
     height: 400px;
@@ -93,6 +93,19 @@ svg{
     display:block;
     border-radius: 50px;
     box-shadow:5px 5px 10px 10px #d0cdcdb1 
+}
+
+
+#move:hover{
+    cursor: move;
+}
+
+#fill:hover{
+    cursor:url("./media/paint_bucket.png"),auto;
+}
+
+#delete:hover{
+    cursor:url("./media/eraser.png"),auto;
 }
 
 button{

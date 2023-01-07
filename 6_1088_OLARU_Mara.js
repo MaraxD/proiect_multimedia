@@ -1,6 +1,6 @@
 var shape="line" //the default shape for drawing
 
-//in cazul in care utilizatorul vrea sa deseneze altcv decat o linie
+//in case the user want to draw anything other than a line
 var shapes=document.getElementsByClassName("shape")
 for(let i=0;i<shapes.length;i++){
     shapes[i].addEventListener('click',function(){
@@ -10,13 +10,10 @@ for(let i=0;i<shapes.length;i++){
 }
 
 
-//adaugare eventListener atunci cand user ul schimba culoarea
-//2 events: input, pentru cand user ul schimba culoarea
-        // change, cand user ul se razgandeste    
-//cand desenezi mai multe forme, se stocheaza intr un array de acele forme
+//as the user draws shapes, they will be saved in an array (useful for later)
 
-var color=document.getElementById("color"), newColor='black', fillColor='black' //initial e setat pe negru
-
+var color=document.getElementById("color"), newColor='black', fillColor='black' //initial color of the shape
+//adding eventListener when the user changes the color 
 color.addEventListener('input',function(){
     newColor=color.value
     fillColor=color.value
@@ -28,7 +25,7 @@ dropdown.addEventListener('input',function(){
     newThicc=dropdown.value
 })
 
-//an array of shapes that have been drawn
+//an array of shapes that have been drawn (useful for the undo and redo operations)
 var drawnS=[]
 
 //for the undo button, we will start with the last element in the array and the delete it 
@@ -41,7 +38,7 @@ btnUndo.addEventListener('click',function(){
 
 })
 
-//redo button, i ve put the last child of svg to the beginning of drawS
+//redo button, i ve put the last child of svg to the beginning of drawnS
 //so the last one deleted should be the first one pushed out
 //the button should disappear when the last item was restored 
 btnRedo=document.getElementById("redo")
@@ -110,7 +107,6 @@ btnSave.addEventListener('click',function(){
     img.addEventListener('load',function(){
         const bbox=svg2.getBBox()
         const canvas=document.createElement('canvas')
-        //nu ia toata inaltimea?
         canvas.width=bbox.width
         canvas.height=bbox.height
 
@@ -151,21 +147,7 @@ window.addEventListener('load',()=>{
     }
 })
 
-
-function drawAround(startX,startY, endX, endY){
-    const w=Math.abs(endX-startX)
-    const h=Math.abs(endY-startY)
-    if(endX>startX){
-        endX=startX
-    }
-
-    if(endY>startY){
-        endY=startY
-    }
-
-    svg.innerHTML=`<rect x=${endX} y=${endY} w=${w} h=${h}></rect>`
-}
-
+//editing tools for when the user clicks on a drawn shape
 function editing(shape){
     shape.addEventListener('click',(e)=>{
         if(!(document.getElementById('edit'))){
@@ -206,16 +188,16 @@ function editing(shape){
             document.getElementById("edit").appendChild(btnDelete)
             document.getElementById("edit").appendChild(btnCancel)
 
-            //stergere
+            //delete
             btnDelete.addEventListener('click',function(){
                 svg.removeChild(e.target)
-                //daca sa sterge trebuie sa dispara si butoanele
+                //if the shape is deleted, all the buttons should be removed
                 document.getElementById("tools").removeChild(divEdit)
             })
 
             //fill in: does not work the second time you press on the shape
             btnEdit.addEventListener('click',function(){
-                //only the selected shape can be edited
+                    //only the selected shape can be edited
                     e.target.addEventListener('click',function(){
                         if(e.target.tagName==='line'){
                             e.target.style.stroke=fillColor
@@ -248,7 +230,7 @@ function editing(shape){
     })
 }
 
-const svg=document.querySelector("#editor") //de ce nu se poate cu getElementById
+const svg=document.querySelector("#editor") 
 const svgPoint=(svg,x,y)=>{
     const p=new DOMPoint(x,y)
     p.x=x
@@ -328,6 +310,7 @@ svg.addEventListener('mousedown',(e)=>{
                 //editing
                 editing(shapeS)
 
+                //failed attempt at moving a drawn shape
                 let btnMove=document.getElementById('move')
                 if(btnMove){
                     btnMove.addEventListener('click',(event)=>{
@@ -386,12 +369,6 @@ svg.addEventListener('mousedown',(e)=>{
                 })
                 }
                 
-
-            
-
-                
-        
-
             break;
 
         case "circle":
