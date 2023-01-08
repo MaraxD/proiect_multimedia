@@ -9,8 +9,7 @@ for(let i=0;i<shapes.length;i++){
     
 }
 
-
-//as the user draws shapes, they will be saved in an array (useful for later)
+const svg=document.querySelector("#editor") 
 
 var color=document.getElementById("color"), newColor='black', fillColor='black' //initial color of the shape
 //adding eventListener when the user changes the color 
@@ -31,25 +30,46 @@ var drawnS=[]
 //for the undo button, we will start with the last element in the array and the delete it 
 //but we have to make a copy after the initial array if we want the redo button to work
 //both buttons should disappear only when there is at least one shape drawn
-var btnUndo=document.getElementById("undo") 
+let btnUndo=document.getElementById('undo'),
+    btnRedo=document.getElementById("redo")
+svg.addEventListener('mousedown',function(){
+    //the btn should appear at the first instance of a shape
+        if(svg.childElementCount>0){
+            if(btnUndo.getAttribute('hidden')){
+            //if it is hidden
+            btnUndo.removeAttribute('hidden')
+            }
+        }
+})
+    
+    
 btnUndo.addEventListener('click',function(){ 
-    drawnS.push(svg.lastElementChild)      
-    svg.removeChild(svg.lastElementChild)
+        drawnS.push(svg.lastElementChild)      
+        svg.removeChild(svg.lastElementChild)
+        if(svg.childElementCount===0){
+            btnUndo.setAttribute('hidden','hidden')
+            btnRedo.removeAttribute('hidden')
+        }
+    })
 
-})
 
-//redo button, i ve put the last child of svg to the beginning of drawnS
-//so the last one deleted should be the first one pushed out
-//the button should disappear when the last item was restored 
-btnRedo=document.getElementById("redo")
+// redo button, i ve put the last child of svg to the beginning of drawnS
+// so the last one deleted should be the first one pushed out
+// the button should disappear when the last item was restored 
 btnRedo.addEventListener('click',function(){
-    svg.appendChild(drawnS[drawnS.length-1])
-    if(drawnS.length!=0){
-        drawnS.length--
-    }
+    if(drawnS.length>1){    
+        svg.appendChild(drawnS[drawnS.length-1])
+        console.log(drawnS.length)
+    }else{
+        //when the user redoes the last element
+        svg.appendChild(drawnS[drawnS.length-1])
+        btnRedo.setAttribute('hidden','hidden')
+    }        
+    drawnS.length--
+
 })
 
-//move a shape
+//failed attempt at moving a shape
 // function moveShape(){
 //     svg.addEventListener('mousedown',startMove)
 //     svg.addEventListener('mousemove',move)
@@ -75,10 +95,10 @@ btnRedo.addEventListener('click',function(){
 // }
 
 
-//download the drawing
 const getCSS=()=>{
     const sheet=document.styleSheets[0]
     const styleRules=[]
+    //pushing the styles associated to the shapes into an array
     for(let i=0;i<sheet.cssRules.length;i++){
         styleRules.push(sheet.cssRules.item(i).cssText)
     }
@@ -92,6 +112,8 @@ const getCSS=()=>{
 
 const style=getCSS()
 
+
+//download the drawing as png
 let btnSave=document.getElementById('save')
 btnSave.addEventListener('click',function(){
     const svg2=document.querySelector('svg')
@@ -105,13 +127,15 @@ btnSave.addEventListener('click',function(){
     const url=URL.createObjectURL(svgBlob)
     const img=new Image()
     img.addEventListener('load',function(){
+        //getting the coordinates of the svg for drawing (x,y, height, width)
         const bbox=svg2.getBBox()
         const canvas=document.createElement('canvas')
-        canvas.width=bbox.width
-        canvas.height=bbox.height
+        canvas.width=1000
+        canvas.height=400
 
+       
         const context=canvas.getContext('2d')
-        context.drawImage(img,0,0,canvas.width,canvas.height)
+        context.drawImage(img,0,0,bbox.width,bbox.height)
 
         URL.revokeObjectURL(url)
 
@@ -119,6 +143,50 @@ btnSave.addEventListener('click',function(){
         a.download='image.png'
         document.body.appendChild(a)
         a.href=canvas.toDataURL()
+        a.click()
+        a.remove()
+    })
+    img.src=url
+})
+
+//download as SVG file
+let btnSVG=document.getElementById('saveSVG')
+btnSVG.addEventListener('click',function(){
+    const svg2=document.querySelector('svg')
+    svg2.insertBefore(style,svg.firstChild)
+    const data=(new XMLSerializer()).serializeToString(svg2) //the xml that should be put in the url
+   
+    const svgBlob=new Blob([data],{
+        type:"image/svg+xml;charset=utf-8"
+    }) 
+    style.remove()
+
+    const url=URL.createObjectURL(svgBlob)
+    console.log(url)
+    const img=new Image()
+    img.addEventListener('load',function(){
+        //getting the coordinates of the svg for drawing (x,y, height, width)
+        const bbox=svg2.getBBox()
+        const canvas=document.createElement('canvas')
+        canvas.width=1000
+        canvas.height=400
+        canvas.innerHTML=data
+
+       
+        const context=canvas.getContext('2d')
+        context.drawImage(img,0,0,bbox.width,bbox.height)
+
+    
+        URL.revokeObjectURL(url)
+
+        const a =document.createElement('a')
+        a.download='imageSVG.svg'
+        
+        console.log(a)
+        document.body.appendChild(a)
+        // a.setAttribute('xlink:href',canvas.toDataURL())
+        a.href=canvas.toDataURL()
+
         a.click()
         a.remove()
     })
@@ -152,32 +220,31 @@ function editing(shape){
     shape.addEventListener('click',(e)=>{
         if(!(document.getElementById('edit'))){
 
-            
-            divEdit=document.createElement("div")
+            let divEdit=document.createElement("div")
             divEdit.id="edit"
             document.getElementById("tools").appendChild(divEdit)
 
-            h4Elem=document.createElement("h4")
+            let h4Elem=document.createElement("h4")
             h4Elem.innerHTML="Tools"
             document.getElementById("edit").appendChild(h4Elem)
 
-            btnDelete=document.createElement("button")
+            let btnDelete=document.createElement("button")
             btnDelete.innerHTML="Delete"
             btnDelete.id="delete"
 
-            btnEdit=document.createElement("button")
+            let btnEdit=document.createElement("button")
             btnEdit.innerHTML="Color it"
             btnEdit.id="fill"
 
-            btnStroke=document.createElement("button")
+            let btnStroke=document.createElement("button")
             btnStroke.innerHTML="Change stroke"
             btnStroke.id="stroke"
 
-            btnMove=document.createElement("button")
+            let btnMove=document.createElement("button")
             btnMove.innerHTML="Move"
             btnMove.id="move"
 
-            btnCancel=document.createElement("button")
+            let btnCancel=document.createElement("button")
             btnCancel.innerHTML="Cancel"
             btnCancel.id="cancel"
 
@@ -230,7 +297,6 @@ function editing(shape){
     })
 }
 
-const svg=document.querySelector("#editor") 
 const svgPoint=(svg,x,y)=>{
     const p=new DOMPoint(x,y)
     p.x=x
@@ -278,6 +344,7 @@ svg.addEventListener('mousedown',(e)=>{
                 const p=svgPoint(svg, event.clientX,event.clientY)
                 const w=Math.abs(p.x-start.x)
                 const h=Math.abs(p.y-start.y)
+
                 if(p.x>start.x){
                     p.x=start.x
                 }
@@ -309,79 +376,20 @@ svg.addEventListener('mousedown',(e)=>{
                 
                 //editing
                 editing(shapeS)
-
-                //failed attempt at moving a drawn shape
-                let btnMove=document.getElementById('move')
-                if(btnMove){
-                    btnMove.addEventListener('click',(event)=>{
-                    let shape=event.target
-                    shape.addEventListener('mousedown',startMove)
-                    shape.addEventListener('mousemove',move)
-                    shape.addEventListener('mouseup',endMove)
-                    shape.addEventListener('mouseleave',endMove)
-
-                    var selectedItem, offset
-
-                    function getMousePosition(event){
-                        var CTM=svg.getScreenCTM()
-                        return{
-                            x:(event.clientX-CTM.e)/CTM.a,
-                            y:(event.clientY-CTM.f)/CTM.d
-
-                        };
-                    }
-
-                    function startMove(event){
-                        if(event.target){
-                            selectedItem=event.target
-                            offset=getMousePosition(event)
-                            offset.x-=parseFloat(selectedItem.getAttribute(null,'x'))
-                            offset.y-=parseFloat(selectedItem.getAttribute(null,'y'))
-
-                        }
-                    }
-
-                    function move(event){
-                        if(selectedItem){
-                            event.preventDefault()
-                            var coord=getMousePosition(event)
-                            selectedItem.setAttributeNS(null,'x',coord.x-offset.x)
-                            selectedItem.setAttributeNS(null,'y',coord.y-offset.y)
-
-                        }
-                    }
-
-                    function endMove(){
-                        selectedItem=null
-                    }
-
-                    // e.target.addEventListener('mouseover',(event)=>{
-                    //     event.preventDefault()
-                    //     console.log(e.target.getAttributeNS(null,'x'))
-                    //     var newX=parseFloat(e.target.getAttributeNS(null,'x'))
-                    //     e.target.setAttributeNS(null,'x',newX+0.1)
-                    // })
-
-                    // e.target.addEventListener('mouseup',function(){
-                    //     e.target=null
-                    // }) 
-                
-                })
-                }
-                
+   
             break;
 
         case "circle":
             const drawCircle=(event)=>{
                 const p=svgPoint(svg, event.clientX,event.clientY)
-                const r=Math.abs(p.x-start.x)/2
-                
+                const rx=Math.abs(p.x-start.x)/2, 
+                    ry=Math.abs(p.y-start.y)/2
 
                 shapeS.setAttribute('class','drawing')
                 shapeS.setAttribute('style','stroke:'+newColor+";stroke-width:"+newThicc)
                 shapeS.setAttribute('cx',p.x)
                 shapeS.setAttribute('cy',p.y)
-                shapeS.setAttribute('r',r)
+                shapeS.setAttribute('r',Math.max(rx,ry))
                 svg.appendChild(shapeS)
 
 
